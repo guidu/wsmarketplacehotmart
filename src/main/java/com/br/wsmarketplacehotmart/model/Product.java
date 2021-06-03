@@ -1,15 +1,14 @@
 package com.br.wsmarketplacehotmart.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.br.wsmarketplacehotmart.dto.ProductDTO;
@@ -42,6 +41,12 @@ public class Product {
 	public Product(String name, String description) {
 		this.name = name;
 		this.description = description;
+	}
+
+	public Product(String name, String description, LocalDate dateCreation) {
+		this.name = name;
+		this.description = description;
+		this.dateCreation = dateCreation;
 	}
 
 	public Product(ProductDTO productDTO) {
@@ -88,13 +93,5 @@ public class Product {
 	public void setDateCreation(LocalDate dateCreation) {
 		this.dateCreation = dateCreation;
 	}
-
-//	public Sale getSale() {
-//		return sale;
-//	}
-//
-//	public void setSale(Sale sale) {
-//		this.sale = sale;
-//	}
 
 }

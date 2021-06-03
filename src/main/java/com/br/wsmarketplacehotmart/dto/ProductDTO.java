@@ -1,7 +1,8 @@
 package com.br.wsmarketplacehotmart.dto;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.br.wsmarketplacehotmart.model.Product;
 import com.br.wsmarketplacehotmart.view.ProductForm;
@@ -61,5 +62,12 @@ public class ProductDTO {
 	public void setDateCreation(LocalDate dateCreation) {
 		this.dateCreation = dateCreation;
 	}
-	
+
+	public List<ProductDTO> getProductList(List<Product> productList) {
+		List<ProductDTO> productDTOlist = new ArrayList<ProductDTO>();
+		for (Product product : productList) {
+			productDTOlist.add(new ProductDTO(product));
+		}
+		return productDTOlist;
+	}
 }

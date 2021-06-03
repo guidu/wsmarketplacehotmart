@@ -14,7 +14,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbsale")
 public class Sale {
-	// Venda: identificador, vendedor, comprador, produto
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

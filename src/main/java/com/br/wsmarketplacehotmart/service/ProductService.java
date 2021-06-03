@@ -18,13 +18,13 @@ public class ProductService {
 	public Product insert(Product product) {
 		return productRepository.save(product);
 	}
-
-	public void delete(Product product) {
-		productRepository.delete(product);
+	public Product update(Product product, Integer identifier) {
+		product.setIdentifier(identifier);
+		return productRepository.saveAndFlush(product);
 	}
 
-	public Optional<Product> listProduct(Product product) {
-		return productRepository.findById(product.getIdentifier());
+	public void delete(Integer identifier) {
+		productRepository.deleteById(identifier);
 	}
 
 	public List<Product> listAllProduct() {

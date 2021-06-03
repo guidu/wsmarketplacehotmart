@@ -2,22 +2,12 @@ package com.br.wsmarketplacehotmart.view;
 
 import java.time.LocalDate;
 
-import com.br.wsmarketplacehotmart.dto.ProductDTO;
 import com.br.wsmarketplacehotmart.model.Product;
 
-public class ProductForm {
-	private Integer identifier;
+public class ProductAlterForm {
 	private String name;
 	private String description;
 	private LocalDate dateCreation;
-
-	public Integer getIdentifier() {
-		return identifier;
-	}
-
-	public void setIdentifier(Integer identifier) {
-		this.identifier = identifier;
-	}
 
 	public String getName() {
 		return name;
@@ -42,16 +32,8 @@ public class ProductForm {
 	public void setDateCreation(LocalDate dateCreation) {
 		this.dateCreation = dateCreation;
 	}
-
-	public ProductDTO convertProductForm(ProductForm productForm) {
-		return new ProductDTO(productForm);
-	}
-
-	public ProductDTO convertProductDTO(ProductForm productForm) {
-		return new ProductDTO(productForm);
-	}
-
+	
 	public Product convertProduct() {
-		return new Product(name, description);
+		return new Product(name, description, dateCreation);
 	}
 }
