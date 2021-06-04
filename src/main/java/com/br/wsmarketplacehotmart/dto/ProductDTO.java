@@ -1,6 +1,6 @@
 package com.br.wsmarketplacehotmart.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class ProductDTO {
 	private Integer identifier;
 	private String name;
 	private String description;
-	private LocalDate dateCreation;
+	private LocalDateTime dateCreation;
 
 	public ProductDTO() {
 	}
@@ -55,11 +55,11 @@ public class ProductDTO {
 		this.description = description;
 	}
 
-	public LocalDate getDateCreation() {
+	public LocalDateTime getDateCreation() {
 		return dateCreation;
 	}
 
-	public void setDateCreation(LocalDate dateCreation) {
+	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
 	}
 

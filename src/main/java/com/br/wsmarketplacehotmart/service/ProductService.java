@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.br.wsmarketplacehotmart.model.Product;
@@ -33,5 +34,10 @@ public class ProductService {
 
 	public Optional<Product> findProduct(Integer identifier) {
 		return productRepository.findById(identifier);
+	}
+	
+
+	public List<Product> listAllProduct(Sort sort) {
+		return productRepository.findAll(sort);
 	}
 }

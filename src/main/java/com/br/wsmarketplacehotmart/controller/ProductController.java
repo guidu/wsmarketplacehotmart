@@ -4,7 +4,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +45,7 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/delete/{identifier}")
+	@Transactional
 	public List<ProductDTO> delete(@PathVariable Integer identifier) {
 		productService.delete(identifier);
 		List<Product> productList = productService.listAllProduct();
@@ -49,6 +53,7 @@ public class ProductController {
 	}
 
 	@PutMapping("/update/{identifier}")
+	@Transactional
 	public ResponseEntity<ProductDTO> update(@PathVariable Integer identifier,
 			@RequestBody ProductAlterForm productAlterForm) {
 		Product product = productAlterForm.convertProduct();
@@ -57,11 +62,24 @@ public class ProductController {
 	}
 
 	@PostMapping("/insert")
+	@Transactional
 	public ResponseEntity<ProductDTO> create(@RequestBody ProductForm productForm,
 			UriComponentsBuilder uriComponentsBuilder) {
 		Product product = productForm.convertProduct();
 		productService.insert(product);
 		URI uri = uriComponentsBuilder.path("/productlist/{id}").buildAndExpand(product.getIdentifier()).toUri();
 		return ResponseEntity.created(uri).body(new ProductDTO(product));
+	}
+
+	@GetMapping("/findorderedproducts")
+	public List<ProductDTO> listProductOrder() {
+		Sort sort = createStaticSort();
+		List<Product> productList = productService.listAllProduct(sort);
+		return new ProductDTO().getProductList(productList);
+	}
+
+	public Sort createStaticSort() {
+		String[] arrayOrdre = { "ranqueamento","nome","categoria" };
+		return Sort.by(arrayOrdre);
 	}
 }

@@ -1,13 +1,13 @@
 package com.br.wsmarketplacehotmart.view;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.br.wsmarketplacehotmart.model.Product;
 
 public class ProductAlterForm {
 	private String name;
 	private String description;
-	private LocalDate dateCreation;
+	private LocalDateTime dateCreation;
 
 	public String getName() {
 		return name;
@@ -25,11 +25,11 @@ public class ProductAlterForm {
 		this.description = description;
 	}
 
-	public LocalDate getDateCreation() {
+	public LocalDateTime getDateCreation() {
 		return dateCreation;
 	}
 
-	public void setDateCreation(LocalDate dateCreation) {
+	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
 	}
 	

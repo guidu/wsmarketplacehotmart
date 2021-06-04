@@ -1,6 +1,6 @@
 package com.br.wsmarketplacehotmart.view;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.br.wsmarketplacehotmart.dto.ProductDTO;
 import com.br.wsmarketplacehotmart.model.Product;
@@ -9,7 +9,7 @@ public class ProductForm {
 	private Integer identifier;
 	private String name;
 	private String description;
-	private LocalDate dateCreation;
+	private LocalDateTime dateCreation;
 
 	public Integer getIdentifier() {
 		return identifier;
@@ -35,11 +35,11 @@ public class ProductForm {
 		this.description = description;
 	}
 
-	public LocalDate getDateCreation() {
+	public LocalDateTime getDateCreation() {
 		return dateCreation;
 	}
 
-	public void setDateCreation(LocalDate dateCreation) {
+	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
 	}
 

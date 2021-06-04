@@ -1,22 +1,26 @@
 package com.br.wsmarketplacehotmart.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.br.wsmarketplacehotmart.audit.Auditable;
 import com.br.wsmarketplacehotmart.dto.ProductDTO;
 import com.br.wsmarketplacehotmart.view.ProductForm;
 
 @Entity
 @Table(name = "tbproduct")
-public class Product {
+@EntityListeners(AuditingEntityListener.class)
+
+public class Product  extends Auditable<String>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "identifier")
@@ -25,13 +29,13 @@ public class Product {
 	private String name;
 	@Column(name = "description")
 	private String description;
-	@Column(name = "dateCreation", nullable = false)
-	private LocalDate dateCreation = LocalDate.now();
+	@Column(name = "datecreation")
+	private LocalDateTime dateCreation = LocalDateTime.now();
 
 	public Product() {
 	}
 
-	public Product(Integer identifier, String name, String description, LocalDate dateCreation) {
+	public Product(Integer identifier, String name, String description, LocalDateTime dateCreation) {
 		this.identifier = identifier;
 		this.name = name;
 		this.description = description;
@@ -43,7 +47,7 @@ public class Product {
 		this.description = description;
 	}
 
-	public Product(String name, String description, LocalDate dateCreation) {
+	public Product(String name, String description, LocalDateTime dateCreation) {
 		this.name = name;
 		this.description = description;
 		this.dateCreation = dateCreation;
@@ -86,11 +90,11 @@ public class Product {
 		this.description = description;
 	}
 
-	public LocalDate getDateCreation() {
+	public LocalDateTime getDateCreation() {
 		return dateCreation;
 	}
 
-	public void setDateCreation(LocalDate dateCreation) {
+	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
 	}
 
