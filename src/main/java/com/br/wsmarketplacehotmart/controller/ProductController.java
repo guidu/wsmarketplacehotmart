@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.br.wsmarketplacehotmart.dto.NewsAPIDTO;
 import com.br.wsmarketplacehotmart.dto.ProductDTO;
 import com.br.wsmarketplacehotmart.model.AssessProduct;
 import com.br.wsmarketplacehotmart.model.Product;
@@ -133,22 +134,27 @@ public class ProductController {
 				+ (countNote5 * 5)) / summation * 1.0;
 		return average;
 	}
+
 	/*
 	 * Y = Quantidade de vendas/dias que o produto existe
 	 */
 	public long productSalesQuantity(Integer identifierProduct) {
 		long quantityOfSales = saleService.findProductSalesQuantity(identifierProduct);
 		Optional<Product> product = productService.findProduct(identifierProduct);
-		long daysTheProductExists = ChronoUnit.DAYS.between(product.get().getDateCreation().minusYears(1), LocalDateTime.now());
-		return quantityOfSales/daysTheProductExists;
+		long daysTheProductExists = ChronoUnit.DAYS.between(product.get().getDateCreation().minusYears(1),
+				LocalDateTime.now());
+		return quantityOfSales / daysTheProductExists;
 	}
+//	Z = Quantidade de notícias da categoria do produto no dia corrente
 	
-public static void main(String[] args) {
-	RestTemplate restTemplate = new RestTemplate(); //1
-	String url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=dbafd5d0212d40888d59582a73c7d054"; //2
-	ResponseEntity<String> response
-	  = restTemplate.getForEntity(url, String.class); //3
-	System.out.println(response.toString());
-}
-	
+	public long amountOfProductCategoryNews(String categoria) {
+		return findNews(categoria).getBody().getTotalResults();
+	}
+	public ResponseEntity<NewsAPIDTO> findNews(String category) {
+		RestTemplate restTemplate = new RestTemplate();
+		String url = "https://newsapi.org/v2/top-headlines?category="+category+"&apiKey=dbafd5d0212d40888d59582a73c7d054";
+		ResponseEntity<NewsAPIDTO> response = restTemplate.getForEntity(url, NewsAPIDTO.class);
+		return response;
+	}
+
 }

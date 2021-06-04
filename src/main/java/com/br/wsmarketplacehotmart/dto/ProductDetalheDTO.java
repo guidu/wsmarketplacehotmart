@@ -6,18 +6,19 @@ import java.util.List;
 
 import com.br.wsmarketplacehotmart.model.Product;
 
-public class ProductDetailsDTO {
+public class ProductDetalheDTO {
 	private Integer identifier;
 	private String name;
 	private String description;
 	private LocalDateTime dateCreation;
 	private Integer score;
 
-	public ProductDetailsDTO(Product product) {
+	public ProductDetalheDTO(Product product) {
 		this.identifier = product.getIdentifier();
 		this.name = product.getName();
 		this.description = product.getDescription();
-		this.dateCreation = product.getDateCreation();	}
+		this.dateCreation = product.getDateCreation();
+	}
 
 	public Integer getIdentifier() {
 		return identifier;
@@ -43,6 +44,7 @@ public class ProductDetailsDTO {
 		this.description = description;
 	}
 
+
 	public LocalDateTime getDateCreation() {
 		return dateCreation;
 	}
@@ -58,10 +60,11 @@ public class ProductDetailsDTO {
 	public void setScore(Integer score) {
 		this.score = score;
 	}
-	public List<ProductDetailsDTO> getProductList(List<Product> productList) {
-		List<ProductDetailsDTO> productDTOlist = new ArrayList<ProductDetailsDTO>();
+
+	public List<ProductDetalheDTO> getProductList(List<Product> productList) {
+		List<ProductDetalheDTO> productDTOlist = new ArrayList<ProductDetalheDTO>();
 		for (Product product : productList) {
-			productDTOlist.add(new ProductDetailsDTO(product));
+			productDTOlist.add(new ProductDetalheDTO(product));
 		}
 		return productDTOlist;
 	}
