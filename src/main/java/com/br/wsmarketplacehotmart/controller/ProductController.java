@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -51,24 +54,28 @@ public class ProductController {
 
 	@GetMapping("/list")
 	@Cacheable("listProduct")
-	public List<ProductDTO> list() {
-		List<Product> productList = productService.listAllProduct();
-		return new ProductDTO().getProductList(productList);
+	public Page<ProductDTO> list(Pageable pageable) {
+		Page<Product> productList = productService.listAllProduct(pageable);
+		return ProductDTO.convert(productList);
 	}
 
 	@GetMapping("/find/{identifier}")
-	public ProductDTO find(@PathVariable Integer identifier, UriComponentsBuilder uriComponentsBuilder) {
-		Optional<Product> product = productService.findProduct(identifier);
-		return new ProductDTO(product.get());
+	public Page<ProductDTO> find(@PathVariable Integer identifier, @RequestParam Pageable pageable,
+			UriComponentsBuilder uriComponentsBuilder) {
+		Page<Product> product = productService.findProduct(identifier, pageable);
+		return ProductDTO.convert(product);
 	}
 
 	@DeleteMapping("/delete/{identifier}")
 	@CacheEvict(value = "listProduct", allEntries = true)
 	@Transactional
-	public List<ProductDTO> delete(@PathVariable Integer identifier) {
-		productService.delete(identifier);
-		List<Product> productList = productService.listAllProduct();
-		return new ProductDTO().getProductList(productList);
+	public ResponseEntity<?> delete(@PathVariable Integer identifier) {
+		Optional<Product> product = productService.findProduct(identifier);
+		if (product.isPresent()) {
+			productService.delete(identifier);
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.notFound().build();
 	}
 
 	@PutMapping("/update/{identifier}")
@@ -76,9 +83,14 @@ public class ProductController {
 	@Transactional
 	public ResponseEntity<ProductDTO> update(@PathVariable Integer identifier,
 			@RequestBody ProductAlterForm productAlterForm) {
-		Product product = productAlterForm.convertProduct();
-		productService.update(product, identifier);
-		return ResponseEntity.ok(new ProductDTO(product));
+		Optional<Product> product = productService.findProduct(identifier);
+		if (product.isPresent()) {
+			Product p = productAlterForm.convertProduct();
+			productService.update(p, identifier);
+			return ResponseEntity.ok(new ProductDTO(p));
+		}
+
+		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping("/insert")
@@ -96,11 +108,14 @@ public class ProductController {
 	public ProductInformationDTO listProductOrder() {
 		List<Product> productList = productService.listAllProduct();
 		productList.forEach(s -> {
-			s.setScore(new Score().calcule(averageProductEvaluationInTheLast12Months(s.getIdentifier()), productSalesQuantity(s.getIdentifier()),
+			s.setScore(new Score().calcule(averageProductEvaluationInTheLast12Months(s.getIdentifier()),
+					productSalesQuantity(s.getIdentifier()),
 					amountOfProductCategoryNews(s.getCategoryProduct().getName())));
 		});
-		new OrderList().orderListProduct(productList);
-		return new ProductInformationDTO("termo",productList);
+		OrderList.orderListProduct(productList);
+		// TODO alterar termo fixo, para termo que o cliente enviar
+		
+		return new ProductInformationDTO("termo", productList);
 	}
 
 	/*
@@ -152,9 +167,8 @@ public class ProductController {
 	public long productSalesQuantity(Integer identifierProduct) {
 		long quantityOfSales = saleService.findProductSalesQuantity(identifierProduct);
 		Optional<Product> product = productService.findProduct(identifierProduct);
-		long daysTheProductExists = ChronoUnit.DAYS.between(product.get().getDateCreation(),
-				LocalDateTime.now());
-		if (daysTheProductExists == 0) { 
+		long daysTheProductExists = ChronoUnit.DAYS.between(product.get().getDateCreation(), LocalDateTime.now());
+		if (daysTheProductExists == 0) {
 			return 0;
 		} else {
 			return quantityOfSales / daysTheProductExists;

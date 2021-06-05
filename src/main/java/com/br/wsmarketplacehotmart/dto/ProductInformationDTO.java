@@ -20,9 +20,7 @@ public class ProductInformationDTO {
 			this.productsDetalhe.add(new ProductDetalheDTO(prod));
 		}
 	}
-//	for (Product p : sale.getProduct()) {
-//		this.product.add(p);
-//	}
+
 	public String getSearchTerm() {
 		return searchTerm;
 	}

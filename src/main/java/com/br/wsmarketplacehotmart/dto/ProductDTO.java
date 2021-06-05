@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.br.wsmarketplacehotmart.model.Product;
 import com.br.wsmarketplacehotmart.view.ProductForm;
 
@@ -83,11 +85,7 @@ public class ProductDTO {
 		this.nameCategory = nameCategory;
 	}
 
-	public List<ProductDTO> getProductList(List<Product> productList) {
-		List<ProductDTO> productDTOlist = new ArrayList<ProductDTO>();
-		for (Product product : productList) {
-			productDTOlist.add(new ProductDTO(product));
-		}
-		return productDTOlist;
+	public static Page<ProductDTO> convert(Page<Product> product) {
+		return product.map(ProductDTO::new);
 	}
 }
