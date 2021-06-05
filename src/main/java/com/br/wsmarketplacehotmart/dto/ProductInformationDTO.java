@@ -1,32 +1,37 @@
 package com.br.wsmarketplacehotmart.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.br.wsmarketplacehotmart.model.Product;
+
 public class ProductInformationDTO {
-	private String name;
-	private LocalDateTime dateCreation;
-	private List<ProductDetalheDTO> productsDetalhe;
+	private String searchTerm;
+	private LocalDateTime currentDate;
+	private List<ProductDetalheDTO> productsDetalhe = new ArrayList<ProductDetalheDTO>();
 
 	public ProductInformationDTO() {
 	}
-
-	public String getName() {
-		return name;
+	public ProductInformationDTO(String searchTerm, List<Product> product) {
+		this.searchTerm = searchTerm;
+		this.currentDate = LocalDateTime.now();
+		for (Product prod : product) {
+			this.productsDetalhe.add(new ProductDetalheDTO(prod));
+		}
 	}
-
-	public void setName(String name) {
-		this.name = name;
+//	for (Product p : sale.getProduct()) {
+//		this.product.add(p);
+//	}
+	public String getSearchTerm() {
+		return searchTerm;
 	}
-
-	public LocalDateTime getDateCreation() {
-		return dateCreation;
+	public void setSearchTerm(String searchTerm) {
+		this.searchTerm = searchTerm;
 	}
-
-	public void setDateCreation(LocalDateTime dateCreation) {
-		this.dateCreation = dateCreation;
+	public LocalDateTime getCurrentDate() {
+		return currentDate;
 	}
-
 	public List<ProductDetalheDTO> getProductsDetalhe() {
 		return productsDetalhe;
 	}
@@ -34,5 +39,4 @@ public class ProductInformationDTO {
 	public void setProductsDetalhe(List<ProductDetalheDTO> productsDetalhe) {
 		this.productsDetalhe = productsDetalhe;
 	}
-
 }

@@ -1,10 +1,6 @@
 package com.br.wsmarketplacehotmart.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.br.wsmarketplacehotmart.model.Articles;
 
 public class ArticlesDTO {
 	private SourceDTO source;
@@ -93,13 +89,5 @@ public class ArticlesDTO {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-	
-	public List<Articles> getListArticles(List<ArticlesDTO> articlesDTO) {
-		List<Articles> listArticles = new ArrayList<Articles>();
-		for (ArticlesDTO a : articlesDTO) {
-			listArticles.add(new Articles(a));
-		}
-		return listArticles;
 	}
 }

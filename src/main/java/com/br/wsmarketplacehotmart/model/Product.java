@@ -39,6 +39,10 @@ public class Product  extends Auditable<String>{
 	
 	@Transient
 	private long score;
+	
+	
+	@Transient
+	private String nameCategoryProduct;
 
 	public Product() {
 	}
@@ -51,9 +55,10 @@ public class Product  extends Auditable<String>{
 		this.categoryProduct = categoryProduct;
 	}
 
-	public Product(String name, String description) {
+	public Product(String name, String description, Integer identifierCategory, String nameCategory) {
 		this.name = name;
 		this.description = description;
+		this.categoryProduct = new CategoryProduct(identifierCategory, nameCategory);
 	}
 
 	public Product(String name, String description, LocalDateTime dateCreation) {
@@ -121,6 +126,14 @@ public class Product  extends Auditable<String>{
 
 	public void setScore(long score) {
 		this.score = score;
+	}
+
+	public String getNameCategoryProduct() {
+		return nameCategoryProduct;
+	}
+
+	public void setNameCategoryProduct(String nameCategoryProduct) {
+		this.nameCategoryProduct = nameCategoryProduct;
 	}
 
 }

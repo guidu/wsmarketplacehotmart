@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.br.wsmarketplacehotmart.model.CategoryProduct;
 import com.br.wsmarketplacehotmart.model.Product;
 import com.br.wsmarketplacehotmart.view.ProductForm;
 
@@ -14,7 +13,8 @@ public class ProductDTO {
 	private String name;
 	private String description;
 	private LocalDateTime dateCreation;
-	private CategoryProductDTO categoryProductDTO;
+	private Integer identifierCategory;
+	private String nameCategory;
 
 	public ProductDTO() {
 	}
@@ -31,6 +31,8 @@ public class ProductDTO {
 		this.name = product.getName();
 		this.description = product.getDescription();
 		this.dateCreation = product.getDateCreation();
+		this.identifierCategory = product.getCategoryProduct().getIdentifier();
+		this.nameCategory = product.getCategoryProduct().getName();
 	}
 
 	public Integer getIdentifier() {
@@ -65,12 +67,20 @@ public class ProductDTO {
 		this.dateCreation = dateCreation;
 	}
 
-	public CategoryProductDTO getCategoryProductDTO() {
-		return categoryProductDTO;
+	public Integer getIdentifierCategory() {
+		return identifierCategory;
 	}
 
-	public void setCategoryProductDTO(CategoryProductDTO categoryProductDTO) {
-		this.categoryProductDTO = categoryProductDTO;
+	public void setIdentifierCategory(Integer identifierCategory) {
+		this.identifierCategory = identifierCategory;
+	}
+
+	public String getNameCategory() {
+		return nameCategory;
+	}
+
+	public void setNameCategory(String nameCategory) {
+		this.nameCategory = nameCategory;
 	}
 
 	public List<ProductDTO> getProductList(List<Product> productList) {

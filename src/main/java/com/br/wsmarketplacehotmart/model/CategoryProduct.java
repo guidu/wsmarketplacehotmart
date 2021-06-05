@@ -14,6 +14,9 @@ public class CategoryProduct {
 	private Integer identifier;
 	private String name;
 
+	public CategoryProduct() {
+	}
+
 	public CategoryProduct(Integer identifier, String name) {
 		this.identifier = identifier;
 		this.name = name;

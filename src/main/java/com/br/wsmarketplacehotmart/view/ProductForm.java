@@ -10,6 +10,8 @@ public class ProductForm {
 	private String name;
 	private String description;
 	private LocalDateTime dateCreation;
+	private Integer identifierCategory;
+	private String nameCategory;
 
 	public Integer getIdentifier() {
 		return identifier;
@@ -42,6 +44,22 @@ public class ProductForm {
 	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
 	}
+	
+	public Integer getIdentifierCategory() {
+		return identifierCategory;
+	}
+
+	public void setIdentifierCategory(Integer identifierCategory) {
+		this.identifierCategory = identifierCategory;
+	}
+	
+	public String getNameCategory() {
+		return nameCategory;
+	}
+
+	public void setNameCategory(String nameCategory) {
+		this.nameCategory = nameCategory;
+	}
 
 	public ProductDTO convertProductForm(ProductForm productForm) {
 		return new ProductDTO(productForm);
@@ -50,8 +68,8 @@ public class ProductForm {
 	public ProductDTO convertProductDTO(ProductForm productForm) {
 		return new ProductDTO(productForm);
 	}
-
+	
 	public Product convertProduct() {
-		return new Product(name, description);
+		return new Product(name, description, identifierCategory, nameCategory);
 	}
 }
