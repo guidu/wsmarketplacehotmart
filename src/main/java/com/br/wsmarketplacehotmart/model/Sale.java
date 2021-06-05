@@ -12,6 +12,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.br.wsmarketplacehotmart.dto.CuyerDTO;
+import com.br.wsmarketplacehotmart.dto.ProductDTO;
+import com.br.wsmarketplacehotmart.dto.SellerDTO;
+
 @Entity
 @Table(name = "tbsale")
 public class Sale {
@@ -25,6 +29,17 @@ public class Sale {
 	private Cuyer cuyer;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Product> product;
+
+	public Sale() {
+	}
+
+	public Sale(SellerDTO saller, CuyerDTO cuyer, List<ProductDTO> products) {
+		this.saller = new Seller(saller);
+		this.cuyer = new Cuyer(cuyer);
+		for (ProductDTO p : products) {
+			this.product.add(new Product(p));
+		}
+	}
 
 	public Integer getIdentifier() {
 		return identifier;

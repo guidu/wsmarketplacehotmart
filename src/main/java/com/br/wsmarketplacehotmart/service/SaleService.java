@@ -11,7 +11,7 @@ public class SaleService {
 	@Autowired
 	public SaleRepository saleRepository;
 	
-	public Sale salve(Sale saleProduct) {
+	public Sale insert(Sale saleProduct) {
 		return saleRepository.save(saleProduct);
 	}
 	

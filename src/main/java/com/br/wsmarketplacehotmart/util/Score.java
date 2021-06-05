@@ -5,8 +5,8 @@ package com.br.wsmarketplacehotmart.util;
  * Y = Quantidade de vendas/dias que o produto existe 
  * Z = Quantidade de notícias da categoria do produto no dia corrente
  */
-public class CalculaleScore {
-	public Integer calcule(Double productRatingAverage, Integer quantityOfSalesDays, Integer amountOfProductCategoryNews) {
+public class Score {
+	public long calcule(Double productRatingAverage, long quantityOfSalesDays, long amountOfProductCategoryNews) {
 		return Math.toIntExact(Math.round(productRatingAverage)) + quantityOfSalesDays + amountOfProductCategoryNews;
 	}
 

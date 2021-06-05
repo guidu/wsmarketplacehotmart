@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.br.wsmarketplacehotmart.model.CategoryProduct;
 import com.br.wsmarketplacehotmart.model.Product;
 import com.br.wsmarketplacehotmart.view.ProductForm;
 
@@ -13,6 +14,7 @@ public class ProductDTO {
 	private String name;
 	private String description;
 	private LocalDateTime dateCreation;
+	private CategoryProductDTO categoryProductDTO;
 
 	public ProductDTO() {
 	}
@@ -61,6 +63,14 @@ public class ProductDTO {
 
 	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
+	}
+
+	public CategoryProductDTO getCategoryProductDTO() {
+		return categoryProductDTO;
+	}
+
+	public void setCategoryProductDTO(CategoryProductDTO categoryProductDTO) {
+		this.categoryProductDTO = categoryProductDTO;
 	}
 
 	public List<ProductDTO> getProductList(List<Product> productList) {

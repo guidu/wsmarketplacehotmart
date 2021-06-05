@@ -2,13 +2,16 @@ package com.br.wsmarketplacehotmart.model;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -31,15 +34,21 @@ public class Product  extends Auditable<String>{
 	private String description;
 	@Column(name = "datecreation")
 	private LocalDateTime dateCreation = LocalDateTime.now();
+	@OneToOne(cascade = CascadeType.ALL)
+	private CategoryProduct categoryProduct;
+	
+	@Transient
+	private long score;
 
 	public Product() {
 	}
 
-	public Product(Integer identifier, String name, String description, LocalDateTime dateCreation) {
+	public Product(Integer identifier, String name, String description, LocalDateTime dateCreation, CategoryProduct categoryProduct) {
 		this.identifier = identifier;
 		this.name = name;
 		this.description = description;
 		this.dateCreation = dateCreation;
+		this.categoryProduct = categoryProduct;
 	}
 
 	public Product(String name, String description) {
@@ -96,6 +105,22 @@ public class Product  extends Auditable<String>{
 
 	public void setDateCreation(LocalDateTime dateCreation) {
 		this.dateCreation = dateCreation;
+	}
+
+	public CategoryProduct getCategoryProduct() {
+		return categoryProduct;
+	}
+
+	public void setCategoryProduct(CategoryProduct categoryProduct) {
+		this.categoryProduct = categoryProduct;
+	}
+
+	public long getScore() {
+		return score;
+	}
+
+	public void setScore(long score) {
+		this.score = score;
 	}
 
 }

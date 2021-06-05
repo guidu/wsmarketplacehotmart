@@ -1,34 +1,37 @@
 package com.br.wsmarketplacehotmart.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.br.wsmarketplacehotmart.dto.SellerDTO;
+import com.br.wsmarketplacehotmart.dto.SourceDTO;
 
-//vendedor
 @Entity
-@Table(name = "tbsaller")
-public class Seller {
+@Table(name = "tbsource")
+public class Source {
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer identifier;
+	private String id;
+	@Column(name = "name")
 	private String name;
 
-	public Seller() {
+	public Source() {
 	}
 
-	public Seller(Integer identifier, String name) {
-		this.identifier = identifier;
+	public Source(String id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 
-	public Seller(SellerDTO sallerDTO) {
-		this.identifier = sallerDTO.getIdentifier();
-		this.name = sallerDTO.getName();
+	public Source(SourceDTO source) {
+		this.id = source.getId();
+		this.name = source.getName();
 	}
 	public Integer getIdentifier() {
 		return identifier;
@@ -36,6 +39,14 @@ public class Seller {
 
 	public void setIdentifier(Integer identifier) {
 		this.identifier = identifier;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getName() {

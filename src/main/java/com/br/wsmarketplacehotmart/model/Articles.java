@@ -1,25 +1,45 @@
-package com.br.wsmarketplacehotmart.dto;
+package com.br.wsmarketplacehotmart.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.br.wsmarketplacehotmart.model.Articles;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class ArticlesDTO {
-	private SourceDTO source;
+import com.br.wsmarketplacehotmart.dto.ArticlesDTO;
+
+@Entity
+@Table(name = "tbarticles")
+public class Articles {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer identifier;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Source source;
+	@Column(name = "author")
 	private String author;
+	@Column(name = "title")
 	private String title;
+	@Column(name = "description")
 	private String description;
+	@Column(name = "url")
 	private String url;
+	@Column(name = "urltoimage")
 	private String urlToImage;
+	@Column(name = "publishedat")
 	private LocalDateTime publishedAt;
+	@Column(name = "content")
 	private String content;
 
-	public ArticlesDTO() {
+	public Articles() {
 	}
 
-	public ArticlesDTO(SourceDTO source, String author, String title, String description, String url, String urlToImage,
+	public Articles(Source source, String author, String title, String description, String url, String urlToImage,
 			LocalDateTime publishedAt, String content) {
 		this.source = source;
 		this.author = author;
@@ -31,11 +51,22 @@ public class ArticlesDTO {
 		this.content = content;
 	}
 	
-	public SourceDTO getSource() {
+	public Articles(ArticlesDTO a) {
+		this.source = new Source(a.getSource());
+		this.author = a.getAuthor();
+		this.title = a.getTitle();
+		this.description = a.getDescription();
+		this.url = a.getUrl();
+		this.urlToImage = a.getUrlToImage();
+		this.publishedAt = a.getPublishedAt();
+		this.content = a.getContent();
+	}
+
+	public Source getSource() {
 		return source;
 	}
 
-	public void setSource(SourceDTO source) {
+	public void setSource(Source source) {
 		this.source = source;
 	}
 
@@ -94,12 +125,5 @@ public class ArticlesDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	public List<Articles> getListArticles(List<ArticlesDTO> articlesDTO) {
-		List<Articles> listArticles = new ArrayList<Articles>();
-		for (ArticlesDTO a : articlesDTO) {
-			listArticles.add(new Articles(a));
-		}
-		return listArticles;
-	}
+
 }

@@ -29,6 +29,7 @@ import com.br.wsmarketplacehotmart.model.Product;
 import com.br.wsmarketplacehotmart.service.AssessProductService;
 import com.br.wsmarketplacehotmart.service.ProductService;
 import com.br.wsmarketplacehotmart.service.SaleService;
+import com.br.wsmarketplacehotmart.util.Score;
 import com.br.wsmarketplacehotmart.view.ProductAlterForm;
 import com.br.wsmarketplacehotmart.view.ProductForm;
 
@@ -85,7 +86,10 @@ public class ProductController {
 	@GetMapping("/findorderedproducts")
 	public List<ProductDTO> listProductOrder() {
 		Sort sort = createStaticSort();
-		List<Product> productList = productService.listAllProduct(sort);
+		List<Product> productList = productService.listAllProduct();// productService.listAllProduct(sort);
+		productList.forEach(s -> {
+			s.setScore(new Score().calcule(mediaAvaliacao(s.getIdentifier()), productSalesQuantity(s.getIdentifier()), amountOfProductCategoryNews(s.getCategoryProduct().getName())));
+		});
 		return new ProductDTO().getProductList(productList);
 	}
 
@@ -146,13 +150,15 @@ public class ProductController {
 		return quantityOfSales / daysTheProductExists;
 	}
 //	Z = Quantidade de notícias da categoria do produto no dia corrente
-	
+
 	public long amountOfProductCategoryNews(String categoria) {
 		return findNews(categoria).getBody().getTotalResults();
 	}
+
 	public ResponseEntity<NewsAPIDTO> findNews(String category) {
 		RestTemplate restTemplate = new RestTemplate();
-		String url = "https://newsapi.org/v2/top-headlines?category="+category+"&apiKey=dbafd5d0212d40888d59582a73c7d054";
+		String url = "https://newsapi.org/v2/top-headlines?category=" + category
+				+ "&apiKey=dbafd5d0212d40888d59582a73c7d054";
 		ResponseEntity<NewsAPIDTO> response = restTemplate.getForEntity(url, NewsAPIDTO.class);
 		return response;
 	}

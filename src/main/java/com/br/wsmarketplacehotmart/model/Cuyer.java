@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.br.wsmarketplacehotmart.dto.CuyerDTO;
+
 @Entity
 @Table(name = "tbcuyer")
 //comprador
@@ -18,6 +20,11 @@ public class Cuyer {
 	public Cuyer(Integer identifier, String name) {
 		this.identifier = identifier;
 		this.name = name;
+	}
+
+	public Cuyer(CuyerDTO cuyer) {
+		this.identifier = cuyer.getIdentifier();
+		this.name = cuyer.getName();
 	}
 
 	public Integer getIdentifier() {
