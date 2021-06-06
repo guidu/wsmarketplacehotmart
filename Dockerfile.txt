@@ -1,0 +1,6 @@
+FROM adoptopenjdk/openjdk11
+MAINTAINER Guilherme Antonio
+COPY /target/wsmarkeplaehotmart-0.0.1-SNAPSHOT.jar wsmarkeplaehotmart-0.0.1-SNAPSHOT.jar
+WORKDIR /target
+ENTRYPOINT ["java","-jar","/wsmarkeplaehotmart-0.0.1-SNAPSHOT.jar"]
+EXPOSE 8080

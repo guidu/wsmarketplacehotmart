@@ -58,6 +58,7 @@ public class Product  extends Auditable<String>{
 	public Product(String name, String description, Integer identifierCategory, String nameCategory) {
 		this.name = name;
 		this.description = description;
+		this.dateCreation  = LocalDateTime.now();
 		this.categoryProduct = new CategoryProduct(identifierCategory, nameCategory);
 	}
 

@@ -1,7 +1,6 @@
 package com.br.wsmarketplacehotmart.controller;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -24,17 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.br.wsmarketplacehotmart.dto.ArticlesDTO;
-import com.br.wsmarketplacehotmart.dto.NewsAPIDTO;
 import com.br.wsmarketplacehotmart.dto.ProductDTO;
 import com.br.wsmarketplacehotmart.dto.ProductInformationDTO;
 import com.br.wsmarketplacehotmart.model.AssessProduct;
 import com.br.wsmarketplacehotmart.model.Product;
-import com.br.wsmarketplacehotmart.service.AssessProductService;
-import com.br.wsmarketplacehotmart.service.ProductService;
+import com.br.wsmarketplacehotmart.service.AssessProductServiceImpl;
+import com.br.wsmarketplacehotmart.service.ProductServiceImpl;
 import com.br.wsmarketplacehotmart.service.SaleService;
 import com.br.wsmarketplacehotmart.util.OrderList;
 import com.br.wsmarketplacehotmart.util.Score;
@@ -46,23 +42,23 @@ import com.br.wsmarketplacehotmart.view.ProductForm;
 public class ProductController {
 
 	@Autowired
-	public ProductService productService;
+	public ProductServiceImpl productServiceImpl;
 	@Autowired
-	public AssessProductService assessProductService;
+	public AssessProductServiceImpl assessProductServiceImpl;
 	@Autowired
 	public SaleService saleService;
 
 	@GetMapping("/list")
 	@Cacheable("listProduct")
 	public Page<ProductDTO> list(Pageable pageable) {
-		Page<Product> productList = productService.listAllProduct(pageable);
+		Page<Product> productList = productServiceImpl.listAllProduct(pageable);
 		return ProductDTO.convert(productList);
 	}
 
 	@GetMapping("/find/{identifier}")
 	public Page<ProductDTO> find(@PathVariable Integer identifier, @RequestParam Pageable pageable,
 			UriComponentsBuilder uriComponentsBuilder) {
-		Page<Product> product = productService.findProduct(identifier, pageable);
+		Page<Product> product = productServiceImpl.findProduct(identifier, pageable);
 		return ProductDTO.convert(product);
 	}
 
@@ -70,9 +66,9 @@ public class ProductController {
 	@CacheEvict(value = "listProduct", allEntries = true)
 	@Transactional
 	public ResponseEntity<?> delete(@PathVariable Integer identifier) {
-		Optional<Product> product = productService.findProduct(identifier);
+		Optional<Product> product = productServiceImpl.findProduct(identifier);
 		if (product.isPresent()) {
-			productService.delete(identifier);
+			productServiceImpl.delete(identifier);
 			return ResponseEntity.ok().build();
 		}
 		return ResponseEntity.notFound().build();
@@ -83,10 +79,10 @@ public class ProductController {
 	@Transactional
 	public ResponseEntity<ProductDTO> update(@PathVariable Integer identifier,
 			@RequestBody ProductAlterForm productAlterForm) {
-		Optional<Product> product = productService.findProduct(identifier);
+		Optional<Product> product = productServiceImpl.findProduct(identifier);
 		if (product.isPresent()) {
 			Product p = productAlterForm.convertProduct();
-			productService.update(p, identifier);
+			productServiceImpl.update(p, identifier);
 			return ResponseEntity.ok(new ProductDTO(p));
 		}
 
@@ -99,18 +95,18 @@ public class ProductController {
 	public ResponseEntity<ProductDTO> create(@RequestBody ProductForm productForm,
 			UriComponentsBuilder uriComponentsBuilder) {
 		Product product = productForm.convertProduct();
-		productService.insert(product);
+		productServiceImpl.insert(product);
 		URI uri = uriComponentsBuilder.path("/productlist/{id}").buildAndExpand(product.getIdentifier()).toUri();
 		return ResponseEntity.created(uri).body(new ProductDTO(product));
 	}
 
 	@GetMapping("/findorderedproducts")
 	public ProductInformationDTO listProductOrder() {
-		List<Product> productList = productService.listAllProduct();
+		List<Product> productList = productServiceImpl.listAllProduct();
 		productList.forEach(s -> {
 			s.setScore(new Score().calcule(averageProductEvaluationInTheLast12Months(s.getIdentifier()),
 					productSalesQuantity(s.getIdentifier()),
-					amountOfProductCategoryNews(s.getCategoryProduct().getName())));
+					productServiceImpl.amountOfProductCategoryNews(s.getCategoryProduct().getName())));
 		});
 		OrderList.orderListProduct(productList);
 		// TODO alterar termo fixo, para termo que o cliente enviar
@@ -121,10 +117,10 @@ public class ProductController {
 	/*
 	 * X = Média de avaliação do produto nos últimos 12 meses
 	 */
-	public Double averageProductEvaluationInTheLast12Months(Integer identifierProduct) {
+	private Double averageProductEvaluationInTheLast12Months(Integer identifierProduct) {
 		LocalDateTime currentDate = LocalDateTime.now();
 		LocalDateTime dateAYearAgo = currentDate.minusYears(1);
-		List<AssessProduct> list = assessProductService.findAssessProductByIdentefierPeriod(identifierProduct,
+		List<AssessProduct> list = assessProductServiceImpl.findAssessProductByIdentefierPeriod(identifierProduct,
 				currentDate, dateAYearAgo);
 		int countNote0 = 0;
 		int countNote1 = 0;
@@ -164,36 +160,15 @@ public class ProductController {
 	/*
 	 * Y = Quantidade de vendas/dias que o produto existe
 	 */
-	public long productSalesQuantity(Integer identifierProduct) {
+	private long productSalesQuantity(Integer identifierProduct) {
 		long quantityOfSales = saleService.findProductSalesQuantity(identifierProduct);
-		Optional<Product> product = productService.findProduct(identifierProduct);
+		Optional<Product> product = productServiceImpl.findProduct(identifierProduct);
 		long daysTheProductExists = ChronoUnit.DAYS.between(product.get().getDateCreation(), LocalDateTime.now());
 		if (daysTheProductExists == 0) {
 			return 0;
 		} else {
 			return quantityOfSales / daysTheProductExists;
 		}
-	}
-	/*
-	 * Z = Quantidade de notícias da categoria do produto no dia corrente
-	 */
-
-	public long amountOfProductCategoryNews(String categoria) {
-		return totalDailyNews(categoria);
-	}
-
-	public Integer totalDailyNews(String category) {
-		RestTemplate restTemplate = new RestTemplate();
-		String url = "https://newsapi.org/v2/top-headlines?category=" + category
-				+ "&apiKey=dbafd5d0212d40888d59582a73c7d054";
-		ResponseEntity<NewsAPIDTO> response = restTemplate.getForEntity(url, NewsAPIDTO.class);
-		Integer countNews = 0;
-		for (ArticlesDTO article : response.getBody().getArticles()) {
-			if (article.getPublishedAt().getDayOfMonth() == LocalDate.now().getDayOfMonth()) {
-				countNews++;
-			}
-		}
-		return countNews;
 	}
 
 }

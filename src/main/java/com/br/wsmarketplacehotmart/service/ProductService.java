@@ -3,45 +3,24 @@ package com.br.wsmarketplacehotmart.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import com.br.wsmarketplacehotmart.model.Product;
-import com.br.wsmarketplacehotmart.repository.ProductRepository;
 
 
-@Service
-public class ProductService {
-	@Autowired
-	ProductRepository productRepository;
+public interface ProductService {
 
-	public Product insert(Product product) {
-		return productRepository.save(product);
-	}
-	public Product update(Product product, Integer identifier) {
-		product.setIdentifier(identifier);
-		return productRepository.saveAndFlush(product);
-	}
+	public Product insert(Product product);
+	public Product update(Product product, Integer identifier);
 
-	public void delete(Integer identifier) {
-		productRepository.deleteById(identifier);
-	}
+	public void delete(Integer identifier);
 
-	public List<Product> listAllProduct() {
-		return productRepository.findAll();
-	}
+	public List<Product> listAllProduct();
 	
-	public Page<Product> listAllProduct(Pageable pageable) {
-		return productRepository.findAll(pageable);
-	}
+	public Page<Product> listAllProduct(Pageable pageable);
 
-	public Optional<Product> findProduct(Integer identifier) {
-		return productRepository.findById(identifier);
-	}
+	public Optional<Product> findProduct(Integer identifier);
 	
-	public Page<Product> findProduct(Integer identifier, Pageable pageable) {
-		return productRepository.findByIdentifier(identifier, pageable);
-	}
+	public Page<Product> findProduct(Integer identifier, Pageable pageable);
 }
