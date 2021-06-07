@@ -1,8 +1,6 @@
 package com.br.wsmarketplacehotmart.dto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 

@@ -12,7 +12,8 @@ import com.br.wsmarketplacehotmart.model.Product;
 public interface ProductService {
 
 	public Product insert(Product product);
-	public Product update(Product product, Integer identifier);
+	
+	public Product update(Product product);
 
 	public void delete(Integer identifier);
 

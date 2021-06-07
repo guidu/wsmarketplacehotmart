@@ -82,7 +82,8 @@ public class ProductController {
 		Optional<Product> product = productServiceImpl.findProduct(identifier);
 		if (product.isPresent()) {
 			Product p = productAlterForm.convertProduct();
-			productServiceImpl.update(p, identifier);
+			p.setIdentifier(identifier);
+			productServiceImpl.update(p);
 			return ResponseEntity.ok(new ProductDTO(p));
 		}
 

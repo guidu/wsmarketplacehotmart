@@ -19,14 +19,18 @@ import com.br.wsmarketplacehotmart.repository.ProductRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-	@Autowired
+	
 	ProductRepository productRepository;
+	
+	@Autowired
+	public ProductServiceImpl(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
 
 	public Product insert(Product product) {
 		return productRepository.save(product);
 	}
-	public Product update(Product product, Integer identifier) {
-		product.setIdentifier(identifier);
+	public Product update(Product product) {
 		return productRepository.saveAndFlush(product);
 	}
 
